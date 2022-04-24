@@ -1,0 +1,30 @@
+.conduct-page{
+    /* justify-content: left; */
+    background-color: #f5efef;
+   
+}
+.btn-close{
+  display: none;
+}
+.navybar{
+  height: 56px;
+  position: fixed;
+}
+.jobinformation{
+position: fixed;
+width: 25%;
+height: 100%;
+background-color:transparent;
+}
+.chatui{
+  
+  position: fixed;
+  float: left;
+  min-width: 50%;
+  height: 100%;
+  margin-left: 25%;
+ 
+  background-color: transparent;
+    }
+    
+   

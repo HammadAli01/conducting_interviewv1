@@ -1,0 +1,161 @@
+.showsidebar{
+    left: 0;
+    background-image: linear-gradient(rgb(45, 113, 214), rgb(56, 109, 206));
+    color: #fff;
+    box-shadow: 0 12px 30px rgb(80 143 244 / 10%);
+    top:56px;
+    width: 20%;
+    height: 100vh;
+    position: fixed;
+    z-index: 5;
+
+
+    text-align:left;
+padding-top: 2%;
+padding-bottom: 5%;
+-moz-transition: all 0.8s ease-in-out;
+    -o-transition: all 0.8s ease-in-out;
+    -webkit-transition: all 0.8s ease-in-out;
+    transition: all 0.8s ease-in-out;
+    /* animation-name: example;
+    animation-duration: 1s; */
+  }
+  
+  @keyframes example {
+    from {left: -20%;}
+    to {left: 0;}
+  }
+.hidesidebar{
+   
+    background-image: linear-gradient(rgb(74, 130, 214), rgb(86, 128, 206));
+    color: #fff;
+    box-shadow: 0 12px 30px rgb(80 143 244 / 10%);
+    top:56px;
+    width: 20%;
+    height: 100vh;
+    position: fixed;
+    z-index: 5;
+
+
+    text-align:left;
+padding-top: 2%;
+padding-bottom: 5%;
+    
+    animation-duration: 0.5s;
+    left: -20%;
+  
+    
+    padding-top: 2%;
+    padding-bottom: 5%;
+    -moz-transition: all 0.8s ease-in-out;
+    -o-transition: all 0.8s ease-in-out;
+    -webkit-transition: all 0.8s ease-in-out;
+    transition: all 0.8s ease-in-out;
+   /* animation-name: example2;
+   animation-duration: 1s; */
+ }
+ 
+ @keyframes example2 {
+   from {left: 0;}
+   to {left: -20%;}
+}
+
+.sidebar-header{
+    border-bottom: 1px solid #a5a5a5;
+    color: #ffffff;
+    width: 100%;
+position: relative;
+overflow: hidden;
+height: max-content; 
+padding-left: 15%;
+padding-bottom: 8%;
+}
+.sidebar-header img{
+width: 60px;
+height: 60px;
+border-radius: 50%;
+outline: none;
+}
+.user-name{
+    font-size: 16px;
+    font-weight: 500;
+    padding-left: 20%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.user-role{
+    font-size: 11px;
+    color: #ffffff;
+    display: block;
+    margin-left: 24%;
+    line-height: 12px;
+/* position: absolute;
+    float: right;
+    top: 47%;
+    right: 33%; */
+}
+.user-info{
+    position: absolute;
+    float: right;
+    top: 15%;
+    right: 32%;
+}
+.sidebaritems{
+    position: relative;
+    width: 100%;
+    height: 80%;
+    height: max-content;
+    overflow: hidden;
+    padding: 1.5rem !important;
+    padding-top: 10% !important;
+}
+
+
+
+.sidebaritems ul{
+list-style-type: none;
+padding: 0px;
+}
+.sidebar-item{
+    border-bottom: 1px solid rgba(255,255,255,.1);
+    color: rgba(255,255,255,.6);
+   padding-top: 10px;
+   padding-bottom: 10px;
+cursor: pointer;
+
+}
+.sidebar-item:hover{
+    color: #fff;
+}
+.sidebar-item span{
+padding-left: 20px;
+font-size: large;
+vertical-align: middle;
+position: absolute;
+padding-top: 1%;
+
+}
+.page-icon{
+    
+    background: #6c77c0;
+color: #6ac8f0;
+transition: all 0.3s ease;
+border-radius: 5px;
+margin: auto;
+margin-left: 10%;
+padding: 5px;
+width: 15%;
+height: 10%;
+text-shadow: 0px 0px 10px rgb(22 199 255/ 50%);
+
+}
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px)  }
+  10% { transform: translate(-1px, -1px)  }
+}
+.sidebar-item:hover .page-icon{
+color: #e7ecee;
+/* animation: shake 0.5s; animation-iteration-count: 2; */
+transform: translateY(-0.15em);
+}
