@@ -38,7 +38,14 @@ body {
     text-align: left;
   }
   .loginbutton{
-   float: right;
+    position: absolute;
+   margin-left: 28%;
+   margin-top: 20px;
+   width: max-content;
+   display: flex !important;
+  }
+  .loginbutton:hover{
+    background-color: #c9c9c9 !important;
   }
   .interivew-instruction-modal-title{
 margin-left: 35%;
@@ -47,14 +54,34 @@ margin-left: 35%;
     margin-bottom: 0;
     line-height: 1.5;
 }
-  .loginbutton:hover{
-   
-    background-color: #c9c9c9 !important;
-  }
+  
   .interview-instruction{
+    margin-left: 20px;
+    min-width: 900px !important;
+    /* border:1px solid #000000; */
+margin-bottom: 0px;
+margin-top:20px;
+padding-top: 20px;
     color: #000000;
   } .interview-instruction ul,li{
   list-style: unset !important; }
+  .interivew-instruction ul,li{
+    margin-top: 5px !important;
+  }
+  .conducting-checkbox-label{
+    font-size: 18px !important;
+    
+  }
+  .conducting-checkbox{
+    margin-top: 10px;
+    height: 15px;
+    width: 15px;
+    margin-right: 20px;
+    margin-left: 60px;
+  }
+  .interview-instruction h4{
+    text-align: left;
+  }
   .menuicon{
     
     color: rgb(255, 255, 255);
@@ -294,18 +321,26 @@ box-shadow: inset 1px 1px 10px 1px #3da4d3;
     cursor: not-allowed;
     border-radius: 10px 10px 10px 10px;
   }
+  .optionbutton:focus{
+    outline: none;
+    
+  }
+  .optionbutton:hover{
+    outline: none;
+    background-color: #789add;
+  }
 .optionbutton{
-    background-color: #4778da; /* Green */
+    background-color: #5378c4; /* Green */
     border: none;
     color: white;
     margin-top: 5px;
     margin-left: 7%;
-    padding: 8px 20px;
+    padding: 6px 15px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     cursor: pointer;
-    font-size: 1.15rem;
+    font-size: 1.0rem;
     
    
     border-radius: 2px 6px 6px 12px;
@@ -558,5 +593,75 @@ width: 100%;
       .msgtime{
         position: relative;
       }
+.hided-p{
+  display: none;
+}
 
-       
+       .faq-area{
+         position: absolute;
+         
+         margin-top: -460px;
+         margin-left: 900px;
+         height: 560px;
+         width: 430px;
+       }
+       .faq-area h4{
+         padding: 10px;
+         width: 100%;
+         border-radius: 5px 5px 0px 0px;
+         border: 1px solid lightgray
+       }
+       .faq-question-answer{
+        
+        text-align: left;
+         color: black !important;
+height:470px;
+overflow-y: scroll;
+padding: 10px;
+margin-top: -10px;
+border-radius: 0px 0px 5px 5px;
+border: 1px solid lightgrey;
+border-top: 0px;
+padding-left: 15px;
+        padding-right: 15px;
+       }
+       .faq-question-answer p{
+       max-width: 100% !important; 
+    margin-bottom: 12px;
+    line-height: 24px;
+    padding: 0px !important;
+    border-radius: 0px !important;
+    position: relative;
+    color: black !important;
+    text-align: left !important;
+  }
+   .faq-question-answer::-webkit-scrollbar  {
+    
+    width: 5px;
+    cursor:pointer;
+  }
+  
+ 
+  .faq-question-answer::-webkit-scrollbar-thumb {
+    
+    background: #afb5b8;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .faq-question-answer::-webkit-scrollbar-thumb:hover {
+    background: #4c4c4d;
+
+cursor: pointer;
+  }
+  .interview-conducted{
+    margin-left: 40%;
+    margin-top: 20%;
+    font-size: 1.2rem;
+  }
+  .conductingloadingImage{
+    width: 200px;
+    height: 200px;
+    margin-top: 15%;
+    margin-left: 45%;
+  }

@@ -9,19 +9,20 @@ export default function Messages(props) {
     //msgs
     const messages=props.messages;
     const inputfiledstatus=useRef(true);
-    const [count,setCount]=useState(0);
+    const count=useRef(true);
     const scrollSpeed = 50;
     var today = new Date();
+    let today_Date=(today.getMonth()+1)+"/"+(today.getDay()-2)+"/"+today.getFullYear();
     const { scrollToElement, scrollToY } = useScroll({ scrollSpeed, containerRef });
      useEffect(() => {
-      
+      console.log("count in useEffect is",count.current);
        scrollToElement(dummy);
-     },[count]);
+     },[count.current]);
     const RenderMessage=(message)=>{
       const msg_time = today.getHours() + ":" + today.getMinutes() ;
       const {member,text} = message;
       const {currentMember} = props; 
-    //  console.log("message got is ",message);
+      console.log("message got is ",message);
       omsg=message;
       const messageFromMe = member.id === currentMember.id;
       const className = messageFromMe ?
@@ -46,8 +47,13 @@ export default function Messages(props) {
               {member.username}
             </div>
            
-            <div className="text bubble-bottom-left">{text}</div>{ messageFromMe?(console.log("Candidate message")):(omsg.options.length!==0?(inputfiledstatus.current=true):(inputfiledstatus.current=false))}
-            
+            <div className="text bubble-bottom-left">{text}</div>
+            {/* { messageFromMe?(console.log("Candidate message1")):(omsg.options.length!==0?(inputfiledstatus.current=true):(inputfiledstatus.current=false))} */}
+
+            {/* { omsg.id==(-11)?(console.log("OLELA-11")):(inputfiledstatus.current=true)} */}
+            { messageFromMe?(console.log("Candidate message1")):(omsg.options.length!==0?(disableInputField()):(ableInputField(omsg)))}
+            {/* { omsg.id==(-1)?(endingMessage()):(console.log("OLELA-2"))} */}
+          {<p className='hided-p'>{count.current=count.current+1}</p>}
             {
               messageFromMe?(console.log("Candidate message")):(
                
@@ -75,7 +81,27 @@ export default function Messages(props) {
     );
     
 }
+const endingMessage=()=>{
+  console.log("ENDING CALLED");
+ 
+  inputfiledstatus.current=true;
+}
+const ableInputField=(myMessage)=>{
+  console.log("ABLE INPUT FIELD CALLED");
+ if(myMessage.id==(-11)||myMessage.id==(-1)||myMessage.id==(-12)){
+  inputfiledstatus.current=true;
+ }else{
+  inputfiledstatus.current=false;
+ }
+  
+}
+  
 
+
+const disableInputField=()=>{
+  inputfiledstatus.current=true;
+  console.log("DISABLE INPUT FIELD CALLED");
+}
 const scroller=()=>{
   
 
@@ -158,7 +184,7 @@ const [text,setText]=useState('');
         <main id="mymain" ref={containerRef} style={{ position: 'relative', overflow: 'scroll' }}>
         <div className="conversationstart">
           
-           <span className='timespan'>4/20/2022</span>
+           <span className='timespan'>{today_Date}</span>
                 </div>
         {messages.map(m =>RenderMessage(m))
        

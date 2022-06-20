@@ -1,247 +1,165 @@
 
 import './App.css';
 import Chat from './Chat';
+import ConductInterview from './ConductInterview';
 import Jobinformation from './JobInformation'
 import React,{useState,useEffect} from 'react';
+import loadingImage from './gif1.gif';
+import canidateimg from './DSC.png';
+import GoogleLogin from "react-google-login";
 import Mainnavbar from './Mainnavbar';
 import axios from "axios";
 //import Allinterviews from './Allinterviews'
 //import SendEmail from './SendEmail';
 function App() {
+  
   const [chatUrl,setChatUrl]=useState(window.location.href);
   const [candidateData,setCandidateData]=useState({interview_id:'',candidate_email:''});
-
+  const [candidateName,setCandidatename]=useState("candidate");
+  const [candidateImageURL,setcandidateImageURL]=useState(canidateimg);
   const [start,setStart]=useState(false);
-  const [count,setCount]=useState(0);
-  const [interviewdata_to_send,setInterviewDataToSend]=useState();
-  const [rules_to_send,setInterviewRules]=useState();
-  const [questions_to_send,setInterviewQuestions]=useState();
+  const [is_conducted,setIsConducted]=useState(false);
+ const [checkBoxState,setCheckBoxState]=useState(false);
+  const [showpage,setshowpage]=useState(false);
   
   window.onload = () => {
     let params = (new URL(chatUrl)).searchParams;
     //console.log("chat url is",params.get('interviewid'));
     candidateData.interview_id=params.get('interviewid');
     candidateData.candidate_email=params.get('useremail');
+    window.localStorage.setItem('interview_Id',candidateData.interview_id);
+    window.localStorage.setItem('candidate_Email',candidateData.candidate_email);
+    //setStart(true);
+    
+
+     checkData();
 //window.localStorage.setItem("hasResponse",JSON.stringify(false));
-    //console.log("user read is",candidateData);
-    checkData();
-    //store in localhost user data if response is correct  checkData( params.get('interviewid'),params.get('userid'));
-  };
+    };
  
-  useEffect(()=>{
-    if(interviewdata_to_send!==undefined){
-    console.log("inter",interviewdata_to_send,"rules",rules_to_send,"questions",questions_to_send);
-    setStart(true);
-  }
-    else{
-      
-      setStart(false);
-    }
-  },[count]);
+
  const checkData=async()=>{
-   console.log("candidateData",candidateData);
+   console.log("candidateData",candidateData,"api is",`${process.env.REACT_APP_API_KEY}/check/applicant/email?interview_id=${candidateData.interview_id}&email=${candidateData.candidate_email}`);
    //api for checking interview and candidate
-   const response = await axios.get(`https://raicruittest.herokuapp.com/check/applicant/email?interview_id=${candidateData.interview_id}&email=${candidateData.candidate_email}`,
+   const response = await axios.get(`${process.env.REACT_APP_API_KEY}/check/applicant/email?email=${candidateData.candidate_email}&interview_id=${candidateData.interview_id}`,
    ).catch((err) => 
       {
-        console.log("Error: ", err);
+       alert("Server down issue found. Kindly try again");
       });
       if (response)  {
+//checking result
+
         //if reponse.attribute==true save data to storage and other data in it too
-        //console.log("reponse by post question is",response);
+        console.log("reponse by post title and id is",response);
         if(response.data.found==true){
-      //     console.log("candidate data set is", localStorage.setItem("myinterview_id",JSON.stringify(candidateData.interview_id)));
-      //  localStorage.setItem('candidate_email', JSON.stringify(candidateData.candidate_email));
-     
-      getInterviewData();
+          console.log("All good going to 2nd api");
+          const response = await axios.get(`${process.env.REACT_APP_API_KEY}/check/interview/conducted?email=${candidateData.candidate_email}&interview_id=${candidateData.interview_id}`,
+          ).catch((err) => 
+             {
+              alert("Server down issue found. Kindly try again");
+             });
+             if (response)  {
+if(response.data==false){
+  console.log("All good calling thrid api");
+  setshowpage(true);
+  setIsConducted(true);
+  
+}else{
+  setshowpage(true);
+  setIsConducted(false);
+  
+  console.log(" Your interview has already been conducted")
+}
+              
+             }
+          
+     // setStart(true);
       }
       else{
-        alert("PAGE NOT FOUND");
+        console.log("PAGE NOT FOUND");
         //call for not found page
       }
+    //first ends below
     }
           
   }
-  const getInterviewData=async()=>{
-//api for getting interview questions and rules;
-const response = await axios.post(`https://raicruittest.herokuapp.com/start/interview?email=${candidateData.candidate_email}&interview_id=${candidateData.interview_id}`,
-).catch((err) => 
-   {
-     console.log("Error: ", err);
-   });
-   if (response)  {
-     //if reponse.attribute==true save data to storage and other data in it too
-     console.log("reponse by post question is",response.data.Question_List,"rules are",response.data.Rules);
+  const responseGoogle = (response) => {
+    console.log("Interview started in app js,succcessfull login");
+    setCandidatename(response.profileObj.name);
+    //image failed request check here
+    setcandidateImageURL(response.profileObj.imageUrl);
+    setStart(true);
+    //console.log(candidateImageURL);
     
-    //for getting interview data
-const interview_Data_Response =await axios.get(`https://raicruittest.herokuapp.com/Interview/get/by/id?id=${candidateData.interview_id}`).then(interview_Data_Response => {
-  console.log("Interview Data response",interview_Data_Response.data); 
-  const gotInterviewdata=interview_Data_Response.data;
-  
-  const gotInterviewdata1={
-    title:gotInterviewdata.title,generationDate:gotInterviewdata.generationDate,startDate:gotInterviewdata.startDate,
-    endDate:gotInterviewdata.endDate,duration:gotInterviewdata.duration,type:gotInterviewdata.type,position:gotInterviewdata.position,
-    jobDescription:gotInterviewdata.job_description
-  };
-  setInterviewDataToSend(gotInterviewdata1);
-setQuestionsAndRules(response.data.Question_List,response.data.Rules);
-})
-.catch(error => {
-  console.error('There was an error!', error);
-});
+      }
+      const response1negGoogle=(response)=>{
+        console.log("Login unsuccessful. Kindly try again");
+      }
+ const handleCheckBoxClick=()=>{
+  setCheckBoxState(!checkBoxState);
  }
-
-    // const gotInterviewdata={
-    //   title:"Job for Nursing",generationDate:"12/03/2022",startDate:"04/10/2022",endDate:"04/14/2022",location:"Shifa Hospital,Islamabad,Pakistan",type:"Full Time",position:"Management",
-    //   jobDescription:"We require registered nurse having valid license from Pakistan nursing council for medical ward. The person should have doneBS nursing(generic). 3-year general nursing diploma from generic institution Should have minimum 2 years experience.1 year specialty in any field of nursing.Age relaxation is subjected to be approve by the selection committee"   
-    // };
-    // setInterviewDataToSend(gotInterviewdata);
-  //   const got_questions=[{
-  //     id:1,
-  //     stem: "Where are you from?",
-  //     option:[{optionText:"Islamabad"}
-  //     ,{
-  //      optionText:"Rawalpindi"},{
-  //      optionText:"Taxila"},{
-  //     optionText:"Other"}]
-  //     },{
-  //       id:2,
-  //       stem: "Are you willing to relocate to Islamabad for this job?",
-  //       option:[{optionText:"Yes"}
-  //       ,{
-  //         optionText:"No"
-  //       }]
-  //    },{
-  //     id:3,
-  //     stem: "From which institution are you graduated?",
-  //     option:[]
-  //  },{
-  //   id:4,
-  //   stem: "Company office is in h-8 Islamabad. Do you have reliable means of transportation for this location?",
-  //   option:[{optionText:"Yes"}
-  //   ,{
-  //     optionText:"No"}]
-  //   },{
-  //     id:5,
-  //     stem: "Are you graduated?",
-  //     option:[{optionText:"Yes"}
-  //     ,{
-  //       optionText:"No"}]
-  //     },{
-  //       id:6,
-  //       stem: "Do you have experience in nursing?",
-  //       option:[{optionText:"Yes"}
-  //       ,{
-  //        optionText:"No"}]
-  //       },{
-  //         id:7,
-  //         stem: "How many years of experience do you have?",
-  //         option:[{optionText:"1 year"}
-  //         ,{
-  //           optionText:"2 year"},{
-  //             optionText:"3 year"},{
-  //              optionText:"Other"}]
-  //         },{
-  //           id:8,
-  //           stem: "What are your salary expectations?",
-  //           option:[{optionText:"50K to 60K"}
-  //           ,{
-  //             optionText:"Below 50K"},{
-  //              optionText:"Below 70K"},{
-  //                 optionText:"other"}]
-  //           },{
-  //             id:9,
-  //             stem: "What is your availability for this job? ",
-  //             option:[{optionText:"Morning Shift"}
-  //             ,{
-  //               optionText:"Night Shift"}]
-  //             },{
-  //               id:10,
-  //               stem: "Thank you for your time the team will contact you back soon.",
-  //               option:[]
-  //            }];
-  //   let questions_convert=[];
-  //            got_questions.map((a_question)=>{
-  //              let temp_question={ id:'',
-  //               text: '',
-  //               options:[]
-  //             };
-  //              temp_question.id=a_question.id;
-  //              temp_question.options=a_question.option;
-  //              temp_question.text=a_question.stem;
-  //              console.log("current question options",a_question.option);
-  //              questions_convert.push(temp_question);
-  //            });
-  //            console.log("converted questions are",questions_convert);
-  //   const got_rules=[
-  //     {source_id:0,target_id:2,option_content:""},
-  //     {source_id:1,target_id:2,option_content:"Rawalpindi"},
-  //     {source_id:1,target_id:2,option_content:"Taxila"},
-  //     {source_id:1,target_id:2,option_content:"Other"},
-  //     {source_id:1,target_id:4,option_content:"Islamabad"},
-  //     {source_id:2,target_id:4,option_content:"Yes"},
-  //     {source_id:2,target_id:4,option_content:"No"},
-  //     {source_id:4,target_id:5,option_content:"Yes"},
-  //     {source_id:4,target_id:5,option_content:"No"},
-  
-  //     {source_id:5,target_id:3,option_content:"Yes"},
-  //     {source_id:5,target_id:6,option_content:"No"},
-  //     {source_id:3,target_id:6,option_content:"Empty"},
-  
-  //     {source_id:6,target_id:7,option_content:"Yes"},
-  //     {source_id:6,target_id:8,option_content:"No"},
-  //     {source_id:7,target_id:8,option_content:"1 year"},
-  //     {source_id:7,target_id:8,option_content:"2 year"},
-  //     {source_id:7,target_id:8,option_content:"3 year"},
-  //     {source_id:7,target_id:8,option_content:"Other"},
-  //     {source_id:8,target_id:9,option_content:"50K to 60K"},
-  //     {source_id:8,target_id:9,option_content:"Below 50K"},
-  //     {source_id:8,target_id:9,option_content:"Below 70K"},
-  //     {source_id:8,target_id:9,option_content:"other"},
-  //     {source_id:10,target_id:10,option_content:"Empty"},
-  //     {source_id:9,target_id:10,option_content:"Morning Shift"},
-  //     {source_id:9,target_id:10,option_content:"Night Shift"},
-  //     {source_id:9,target_id:-1,option_content:""}
-  //   ];
-  //   setInterviewRules(got_rules);
-  //   setInterviewQuestions(questions_convert);
-  //  // console.log("start status before true is",start);
-  //    setCount(1);
-  }
-
-  const setQuestionsAndRules=(initial_questions,initial_rules)=>{
-    console.log("in function val are",initial_questions,initial_rules);
-    let questions_convert=[];
-    initial_questions.map((a_question)=>{
-      let temp_question={ id:'',
-       text: '',
-       options:[]
-     };
-      temp_question.id=a_question.id;
-      temp_question.options=a_question.option;
-      temp_question.text=a_question.stem;
-      //console.log("current question options",a_question.option);
-      questions_convert.push(temp_question);
-    });
-    setInterviewQuestions(questions_convert);
-    setInterviewRules(initial_rules);
-    setCount(1);
-  };
-
   return (
-     
         <div className="App"> 
-        {start==true && <><Mainnavbar side={false}/>
-      <div className='jobinformation'>
-        <Jobinformation interviewData={interviewdata_to_send}/>
-      </div>
-      <div className='chatui'>
-        <Chat interview_rules={rules_to_send} interview_questions={questions_to_send} 
-        interviewId={candidateData.interview_id}
-        userEmail={candidateData.candidate_email}
-        />
-      </div></>}
-     
+       {showpage==true?(
+        <>
+      {start==true?(<ConductInterview candidateName={candidateName} candidateImageURL={candidateImageURL}/>):(
+      <div>
+         <Mainnavbar />{is_conducted==true?(
+          <>
+         <p className='interview-instruction'>
+         <h4>Instructions</h4>
+           
+            <ul>
+            <li>Read all the instruction carefully. All  instructions are important</li>
+  <li>Each interview has a set of questions that you need to answer</li>
+  <li>Not All questions are given options. You need to answer them according to your thinking</li>
+  <li>In order to select the option as your answer click on the option</li>
+  <li>In order to answer those questions that dont have options write in the input field</li>
+  <li>After writing in the input field click on the send button</li>
+  <li>Your interview has a given time</li>
+  <li>No candidate will be able to answer questions after the time is ended</li>
+  <li>Interview has a specific time after shown in the timer at start of interview</li>
+  <li>You can leave the interview by clicking on the menu icon on chat header and clicking lleave button</li>
+  <li>If the interview is completed the candidate won't be able to give answers </li>
+  <li>You are allowed to give interview only once</li>
+  <li>Kindly give interview with honesty</li>
+  
+  
+ 
+</ul>
+            </p>
+      <input type="checkbox" onChange={handleCheckBoxClick} id="conducting-checkbox" className="conducting-checkbox"/><label for="conducting-checkbox" className='conducting-checkbox-label'>I have read the intructions carefully</label>
+      {checkBoxState==true && <GoogleLogin
+                 className='loginbutton'
+                  clientId="1069438428430-b3jg29j7u57shhphc1rduthvbg7m7tck.apps.googleusercontent.com"
+                  buttonText="Login With Google"
+                  onSuccess={responseGoogle}
+                  onFailure={response1negGoogle}
+                  cookiePolicy={'single_host_origin'}
+              /> }
+              <div className='faq-area'>
+              <h4>FAQ's</h4>
+<div className='faq-question-answer'>
+  <h6>Question: How to join the interview</h6>
+  <p>Answer: You can join it by first reading the intruction and then clicking the checkmark after that you will login with you google account and your interview will start</p>
+  <h6>Question: What is the duration of interview</h6>
+  <p>Answer: When the interview will start there will be a timer at the bottom left corner showing the duration remaining</p>
+  <h6>Question: Is it necessary to check intructions</h6>
+  <p>Answer: Interview will start after all the instructions are read and the check label is checked</p>
+  <h6>Question: How to login</h6>
+  <p>Answer: After checking the label click on the login with google button to login to the system</p>
+  <h6>Question: Can we join without login</h6>
+  <p>Answer: No you cannot join wihtout login in with your google account first</p>
+  <h6>Question: How to leave the interview</h6>
+  <p>Answer: Click on the menu icon in chat header and click on leave after that if you want to leave click on ok of the alert</p>
+  <h6>Question: what will happen if we leave the interview</h6>
+  <p>Answer: If you leave the interview your answers will be stores in the system and are evaluated</p>
+  
+</div>
+              
+
+              </div>
+              </>):(<div className='interview-conducted'>Your Interview has already been conducted</div>)}
+      </div>)} </>):(<div className='conducting-1pageloading'><img src={loadingImage} className='conductingloadingImage'></img></div>)}
     </div> 
   );
 }
